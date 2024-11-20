@@ -1,0 +1,52 @@
+spring:
+  profiles:
+    active: local
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: "jdbc:mariadb://localhost:3306/utube?autoReconnect=true&useUnicode=true&serverTimezone=Asia/Seoul"
+    username: root
+    password: 1ar5tk3co
+  jpa:
+    database-platform: org.hibernate.dialect.MariaDBDialect
+    properties:
+      hibernate:
+        storage_engine: innodb
+        format_sql: true # Hibernate가 실행한 SQL 쿼리를 줄바꿈을 적용하여 보기 좋게 출력
+        use_sql_comments: true # Hibernate가 실행한 SQL 쿼리에 주석 추가
+        highlight_sql: true # Hibernate가 실행한 SQL 쿼리에 컬러 표시
+    hibernate:
+      ddl-auto: update
+    open-in-view: true # false일 경우 FetchType.Lazy일 경우 LazyInitializationException 발생
+#    show_sql: true # Hibernate가 실행한 SQL 쿼리를 System.out.print를 이용하여 출력
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+logging:
+  level:
+    root: INFO
+    lynus.homeProject: DEBUG
+    org.springframework.web: DEBUG
+    org.hibernate.SQL: debug # Hibernate가 실행한 SQL 쿼리를 출력
+    org.hibernate.orm.jdbc.bind: TRACE # Hibernate가 실행한 SQL과 파라미터 값을 출력하는 로거 설정
+
+server:
+  port: 3002
+
+springdoc:
+  cache:
+    disabled: true
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+    version: openapi_3_1
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  show-login-endpoint: true
+
+jwt:
+  secret: jwtSecretKeyjwtSecretKeyjwtSecretKeyjwtSecretKey
