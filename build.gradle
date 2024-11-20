@@ -53,19 +53,24 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
+jacoco {
+    toolVersion = "0.8.11"
 }
 
-task testCoverage(type: Test) {
-    group 'verification'
-    description 'Runs the unit tests with coverage'
+tasks.named('test') {
+    useJUnitPlatform()
+    finalizedBy 'jacocoTestReport'
+}
 
-    dependsOn(
-            ':test',
-            ':jacocoTestReport',
-            ':jacocoTestCoverageVerification')
+jacocoTestReport {
+    reports {
+        html.required = true
+        html.outputLocation = layout.projectDirectory.dir('jacocoReport')
+    }
 
-    tasks['jacocoTestReport'].mustRunAfter(tasks['test'])
-    tasks['jacocoTestCoverageVerification'].mustRunAfter(tasks['jacocoTestReport'])
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it)
+        }))
+    }
 }
