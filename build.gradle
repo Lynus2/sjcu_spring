@@ -67,10 +67,11 @@ jacocoTestReport {
         html.required = true
         html.outputLocation = layout.projectDirectory.dir('jacocoReport')
     }
-
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {
-            fileTree(dir: it)
+            fileTree(dir: it, exclude: [
+                    '**/SjcuSpringApplication.class'
+            ])
         }))
     }
 }
