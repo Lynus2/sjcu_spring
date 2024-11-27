@@ -24,7 +24,7 @@ public class CategoryThymeleafAdapter {
         var response = FindLatestResponse.builds(
             utuberInputPort.findLatestUtubes()
         );
-
+ //todo: check logic
         // 모델에 반환 객체를 추가
         model.addAttribute("response", response);
 

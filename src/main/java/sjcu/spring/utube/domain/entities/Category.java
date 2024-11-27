@@ -19,12 +19,11 @@ public class Category {
 
     @PrePersist
     protected void generateUUID() {
-        if (categoryId == null) categoryId = UUID.randomUUID();
+        categoryId = UUID.randomUUID();
     }
 
     @Builder
     public Category(String categoryName) {
-        this.categoryId = UUID.randomUUID();
         this.categoryName = categoryName;
     }
 

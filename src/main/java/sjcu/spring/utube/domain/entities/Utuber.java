@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
 import sjcu.spring.utube.domain.AuditEnity;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
@@ -41,7 +42,7 @@ public class Utuber extends AuditEnity {
 
     @PrePersist
     protected void generateUUID() {
-        if (utuberId == null) utuberId = UUID.randomUUID();
+        utuberId = UUID.randomUUID();
     }
 
     @Builder
@@ -51,6 +52,7 @@ public class Utuber extends AuditEnity {
         this.utuberName = utuberName;
         this.utuberUrl = utuberUrl;
         this.category = category;
+        this.utubes = new ArrayList<>();
     }
 
     public UUID utuberId() {
@@ -98,7 +100,7 @@ public class Utuber extends AuditEnity {
         this.isUse = false;
     }
 
-    public void updateUtuber(UUID categoryid, String utuberName, String utuberUrl, Category category) {
+    public void updateUtuber(String utuberName, String utuberUrl, Category category) {
         this.utuberName = utuberName;
         this.utuberUrl = utuberUrl;
         this.category = category;

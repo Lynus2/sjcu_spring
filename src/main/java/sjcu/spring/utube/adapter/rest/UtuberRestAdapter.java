@@ -12,6 +12,7 @@ import sjcu.spring.utube.adapter.request.UpdateShownUtubeRequest;
 import sjcu.spring.utube.adapter.request.UpdateUtuberRequest;
 import sjcu.spring.utube.adapter.response.*;
 import sjcu.spring.utube.application.port.in.UtuberInputPort;
+import sjcu.spring.utube.application.port.in.command.CreateUtuberCommand;
 
 import java.util.List;
 import java.util.UUID;
@@ -39,7 +40,13 @@ public class UtuberRestAdapter {
     public ResponseEntity<CreateUtuberResponse> createUtuber(
         @Parameter(name = "createUtuberRequest", required = true) @RequestBody CreateUtuberRequest request
     ) {
-        var utuber = utuberInputPort.createUtuber(request);
+        var utuber = utuberInputPort.createUtuber(
+            CreateUtuberCommand.builder()
+                .utuberName(request.utuberName())
+                .utuberUrl(request.utuberUrl())
+                .categoryId(request.categoryId())
+                .build()
+        );
 
         return ResponseEntity.ok(
             CreateUtuberResponse.build(utuber));

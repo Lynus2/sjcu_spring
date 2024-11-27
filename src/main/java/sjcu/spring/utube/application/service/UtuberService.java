@@ -2,10 +2,10 @@ package sjcu.spring.utube.application.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import sjcu.spring.utube.adapter.request.CreateUtuberRequest;
 import sjcu.spring.utube.adapter.request.UpdateShownUtubeRequest;
 import sjcu.spring.utube.adapter.request.UpdateUtuberRequest;
 import sjcu.spring.utube.application.port.in.UtuberInputPort;
+import sjcu.spring.utube.application.port.in.command.CreateUtuberCommand;
 import sjcu.spring.utube.application.port.out.CategoryOutputPort;
 import sjcu.spring.utube.application.port.out.UtuberOutputPort;
 import sjcu.spring.utube.application.port.vo.LatestUtubesVo;
@@ -27,13 +27,13 @@ public class UtuberService implements UtuberInputPort {
     }
 
     @Override
-    public Utuber createUtuber(CreateUtuberRequest request) {
-        var category = categoryOutputPort.findByCategoryId(request.categoryId())
+    public Utuber createUtuber(CreateUtuberCommand command) {
+        var category = categoryOutputPort.findByCategoryId(command.categoryId())
             .orElse(null);
 
         var utuber = Utuber.builder()
-            .utuberName(request.utuberName())
-            .utuberUrl(request.utuberUrl())
+            .utuberName(command.utuberName())
+            .utuberUrl(command.utuberUrl())
             .category(category)
             .build();
 
@@ -102,7 +102,6 @@ public class UtuberService implements UtuberInputPort {
             .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 없습니다."));
 
         utuber.updateUtuber(
-            request.categoryId(),
             request.utuberName(),
             request.utuberUrl(),
             category);

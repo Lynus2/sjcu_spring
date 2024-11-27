@@ -1,6 +1,8 @@
 package sjcu.spring.utube.domain.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import sjcu.spring.utube.domain.AuditEnity;
 
 import java.time.LocalDateTime;
@@ -8,6 +10,8 @@ import java.util.UUID;
 
 @Embeddable
 @Table(name = "utube")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Utube extends AuditEnity {
     @Column(name = "utube_id")
     private UUID utubeId;
