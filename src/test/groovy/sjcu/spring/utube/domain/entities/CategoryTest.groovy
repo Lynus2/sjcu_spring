@@ -17,7 +17,6 @@ class CategoryTest extends Specification {
 
         then:
         noExceptionThrown()
-        category.categoryId() == null
         category.categoryName() == categoryName
     }
 
@@ -27,17 +26,13 @@ class CategoryTest extends Specification {
         def category = Category.builder()
                 .categoryName(categoryName)
                 .build()
-        categoryRepository.save(_) >> { Category c ->
-            c.generateUUID()
-            return c
-        }
+        categoryRepository.save(_) >> category
 
         when:
         categoryRepository.save(category)
 
         then:
         noExceptionThrown()
-        category.categoryId() != null
         category.categoryId().getClass() == UUID
         category.categoryName() == categoryName
     }

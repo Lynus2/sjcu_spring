@@ -17,14 +17,7 @@ public record FindUtubersResponse(
 ) {
     public static List<FindUtubersResponse> builds(List<Utuber> list) {
         return list.stream()
-            .map(utuber -> FindUtubersResponse.builder()
-                .utuberId(utuber.utuberId())
-                .utuberName(utuber.utuberName())
-                .utuberUrl(utuber.utuberUrl())
-                .categoryId(utuber.category().categoryId())
-                .categoryName(utuber.category().categoryName())
-                .isUse(utuber.isUse())
-                .build())
+            .map(FindUtubersResponse::build)
             .toList();
     }
 

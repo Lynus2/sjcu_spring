@@ -145,15 +145,4 @@ class UtuberTest extends Specification {
         then:
         utuber1.utubes().forEach(utube -> utube.isShown())
     }
-
-    def "prePersist"() {
-        when:
-        utuber1.generateUUID()
-        utuber2.generateUUID()
-
-        then:
-        utuber1.utuberId() != null
-        utuber2.utuberId() != null
-        utuber1.utuberId() != utuber2.utuberId()
-    }
 }

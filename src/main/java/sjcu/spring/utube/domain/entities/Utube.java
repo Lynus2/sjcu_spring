@@ -3,7 +3,7 @@ package sjcu.spring.utube.domain.entities;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import sjcu.spring.utube.domain.AuditEnity;
+import sjcu.spring.utube.domain.AuditEntity;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -12,7 +12,7 @@ import java.util.UUID;
 @Table(name = "utube")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Utube extends AuditEnity {
+public class Utube extends AuditEntity {
     @Column(name = "utube_id")
     private UUID utubeId;
 

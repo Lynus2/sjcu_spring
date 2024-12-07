@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
-import sjcu.spring.utube.domain.AuditEnity;
+import sjcu.spring.utube.domain.AuditEntity;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -14,7 +14,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "utuber")
 @NoArgsConstructor
-public class Utuber extends AuditEnity {
+public class Utuber extends AuditEntity {
     @Id
     @Column(name = "utuber_id")
     private UUID utuberId;
@@ -40,15 +40,10 @@ public class Utuber extends AuditEnity {
             foreignKey = @ForeignKey(name = "FK_UTUBER_UTUBE_UTUBER_ID")))
     private List<Utube> utubes;
 
-    @PrePersist
-    protected void generateUUID() {
-        utuberId = UUID.randomUUID();
-    }
-
     @Builder
     public Utuber(String utuberName, String utuberUrl, Category category) {
         Assert.notNull(category, "카테고리 지정 필요");
-
+        this.utuberId = UUID.randomUUID();
         this.utuberName = utuberName;
         this.utuberUrl = utuberUrl;
         this.category = category;

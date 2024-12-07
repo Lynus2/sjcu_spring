@@ -1,9 +1,8 @@
 package sjcu.spring.utube.application.service
 
-import jdk.dynalink.Operation
 import org.springframework.test.util.ReflectionTestUtils
-import sjcu.spring.utube.adapter.request.CreateUtuberRequest
 import sjcu.spring.utube.adapter.request.UpdateShownUtubeRequest
+import sjcu.spring.utube.adapter.request.UpdateUtuberRequest
 import sjcu.spring.utube.application.port.in.command.CreateUtuberCommand
 import sjcu.spring.utube.application.port.out.CategoryOutputPort
 import sjcu.spring.utube.application.port.out.UtuberOutputPort
@@ -27,6 +26,24 @@ class UtuberServiceTest extends Specification {
                     .build())
             .build()
 
+    def utube = new Utube(
+            UUID.randomUUID(),
+            "utubeTitle1",
+            "utubeThumbnail1",
+            "utubeUrl1",
+            false,
+            null)
+
+    def category = Category.builder()
+            .categoryName("category")
+            .build()
+
+    def setup() {
+        def utubes = new ArrayList()
+        utubes.add(utube)
+        utuber.utubes = utubes
+    }
+
     def "삭제처리되지 않은 유튜버 리스트를 조회한다"() {
         given:
         utuberOutputPort.findByDeletedAtIsNull() >> [utuber]
@@ -48,10 +65,6 @@ class UtuberServiceTest extends Specification {
                 .utuberName("utuberName")
                 .utuberUrl("utuberUrl")
                 .categoryId(UUID.randomUUID())
-                .build()
-
-        def category = Category.builder()
-                .categoryName("category")
                 .build()
 
         categoryOutputPort.findByCategoryId(_) >> Optional.of(category)
@@ -164,6 +177,133 @@ class UtuberServiceTest extends Specification {
 
         when:
         utuberService.updateShownUtube(request)
+
+        then:
+        thrown(IllegalArgumentException)
+    }
+
+    def "유튜버 사용 여부 활성화"() {
+        given:
+        def utuberId = utuber.utuberId()
+        utuberOutputPort.findByUtuberId(_) >> Optional.of(utuber)
+        utuberOutputPort.save(_) >> null
+
+        when:
+        def result = utuberService.toggleUtuberUse(utuberId)
+
+        then:
+        noExceptionThrown()
+        result.isUse()
+    }
+
+    def "유튜버 사용 여부 활성화시 유튜버가 존재하지 않으면 에러 반환"() {
+        given:
+        def utuberId = utuber.utuberId()
+        utuberOutputPort.findByUtuberId(_) >> Optional.empty()
+
+        when:
+        def result = utuberService.toggleUtuberUse(utuberId)
+
+        then:
+        thrown(IllegalArgumentException)
+    }
+
+    def "유튜버 사용 여부 비활성화"() {
+        given:
+        def utuberId = utuber.utuberId()
+        utuberOutputPort.findByUtuberId(_) >> Optional.of(utuber)
+        utuberOutputPort.save(_) >> null
+
+        when:
+        def result = utuberService.toggleUtuberDisUse(utuberId)
+
+        then:
+        !result.isUse()
+    }
+
+    def "유튜버 사용 여부 비활성화시 유튜버가 존재하지 않으면 에러 반환"() {
+        given:
+        def utuberId = utuber.utuberId()
+        utuberOutputPort.findByUtuberId(_) >> Optional.empty()
+
+        when:
+        def result = utuberService.toggleUtuberDisUse(utuberId)
+
+        then:
+        thrown(IllegalArgumentException)
+    }
+
+    def "유튜버 정보 수정"() {
+        given:
+        def request = UpdateUtuberRequest.builder()
+                .categoryId(UUID.randomUUID())
+                .utuberName("utuberName")
+                .utuberUrl("utuberUrl")
+                .build()
+        utuberOutputPort.findByUtuberId(_) >> Optional.of(utuber)
+        categoryOutputPort.findByCategoryId(_) >> Optional.of(category)
+        utuberOutputPort.save(_) >> null
+
+        when:
+        def result = utuberService.updateUtuber(utuber.utuberId(), request)
+
+        then:
+        noExceptionThrown()
+        result.utuberId() == utuber.utuberId()
+    }
+
+    def "유튜버 정보 수정시 유튜버가 존재하지 않으면 에러 반환"() {
+        given:
+        def request = UpdateUtuberRequest.builder()
+                .categoryId(UUID.randomUUID())
+                .utuberName("utuberName")
+                .utuberUrl("utuberUrl")
+                .build()
+        utuberOutputPort.findByUtuberId(_) >> Optional.empty()
+
+        when:
+        def result = utuberService.updateUtuber(utuber.utuberId(), request)
+
+        then:
+        thrown(IllegalArgumentException)
+    }
+
+    def "유튜버 정보 수정시 카테고리가 존재하지 않으면 에러 반환"() {
+        given:
+        def request = UpdateUtuberRequest.builder()
+                .categoryId(UUID.randomUUID())
+                .utuberName("utuberName")
+                .utuberUrl("utuberUrl")
+                .build()
+        utuberOutputPort.findByUtuberId(_) >> Optional.of(utuber)
+        categoryOutputPort.findByCategoryId(_) >> Optional.empty()
+
+        when:
+        def result = utuberService.updateUtuber(utuber.utuberId(), request)
+
+        then:
+        thrown(IllegalArgumentException)
+    }
+
+    def "유튜버 삭제"() {
+        given:
+        utuberOutputPort.findByUtuberId(_) >> Optional.of(utuber)
+        utuberOutputPort.save(_) >> null
+
+        when:
+        def result = utuberService.deleteUtuber(UUID.randomUUID())
+
+        then:
+        noExceptionThrown()
+        result.deletedAt() != null
+    }
+
+    def "유튜버 삭제시 유튜버가 존재하지 않으면 에러 반환"() {
+        given:
+        utuberOutputPort.findByUtuberId(_) >> Optional.empty()
+
+        when:
+        utuberService.deleteUtuber(UUID.randomUUID())
 
         then:
         thrown(IllegalArgumentException)

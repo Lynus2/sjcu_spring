@@ -17,13 +17,9 @@ public class Category {
     @Column(name = "category_name")
     private String categoryName;
 
-    @PrePersist
-    protected void generateUUID() {
-        categoryId = UUID.randomUUID();
-    }
-
     @Builder
     public Category(String categoryName) {
+        this.categoryId = UUID.randomUUID();
         this.categoryName = categoryName;
     }
 

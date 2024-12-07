@@ -14,7 +14,7 @@ import java.util.UUID;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public class AuditEnity {
+public class AuditEntity {
 
     @CreatedDate
     @Column(name="created_at", updatable = false)
@@ -42,5 +42,9 @@ public class AuditEnity {
 
     public void delete() {
         this.deletedAt = LocalDateTime.now();
+    }
+
+    public LocalDateTime deletedAt() {
+        return this.deletedAt;
     }
 }

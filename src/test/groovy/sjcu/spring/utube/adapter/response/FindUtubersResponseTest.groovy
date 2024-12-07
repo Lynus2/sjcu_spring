@@ -57,7 +57,6 @@ class FindUtubersResponseTest extends Specification {
         result.getFirst().utuberName() == utuber1.utuberName()
         result.getFirst().utuberUrl() == utuber1.utuberUrl()
         result.getFirst().utuberId() == utuber1.utuberId()
-
         result.getLast().utuberName() == utuber2.utuberName()
         result.getLast().utuberUrl() == utuber2.utuberUrl()
         result.getLast().utuberId() == utuber2.utuberId()
